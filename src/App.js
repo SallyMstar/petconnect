@@ -25,46 +25,77 @@ class App extends Component {
     this.getLocalShelters()
   }
 
-// Create the function which can be passed or called as needed to get local pets
-  getLocalPets = () => {
-    const urlPets = 'http://api.petfinder.com/pet.find?key=1edf8545fafb2f223f05f30911af67fa&location=45150&output=basic&format=json';
-    // get array of local pets for adoption
-    axios.get(urlPets) 
-      .then(res => {
-        this.setState({
-          pets: res.data.petfinder.pets.pet
+// ========================== Function Factory ====================================
+  // Create the function which can be passed or called as needed to get local pets
+    getLocalPets = () => {
+      const urlPets = 'http://api.petfinder.com/pet.find?key=1edf8545fafb2f223f05f30911af67fa&location=45150&output=basic&format=json';
+      // get array of local pets for adoption
+      axios.get(urlPets) 
+        .then(res => {
+          this.setState({
+            pets: res.data.petfinder.pets.pet
+          })
+          console.log('pets:')
+          console.log(this.state.pets)
         })
-        console.log('pets:')
-        console.log(this.state.pets)
-      })
-  }
+    }
 
-// Create the function which can be passed or called as needed to get local shelters
+  // Create the function which can be passed or called as needed to get local shelters
   getLocalShelters = () => {
-    const urlLocations = 'http://api.petfinder.com/shelter.find?key=1edf8545fafb2f223f05f30911af67fa&location=45150&output=basic&format=json';
-     // get array of local animal shelters
-    axios.get(urlLocations)
-      .then(res => {
-        let orderedResults = res.data.petfinder.shelters.shelter.sort(sortBy('name.$t'))
+      const urlLocations = 'http://api.petfinder.com/shelter.find?key=1edf8545fafb2f223f05f30911af67fa&location=45150&output=basic&format=json';
+       // get array of local animal shelters
+      axios.get(urlLocations)
+        .then(res => {
+          let orderedResults = res.data.petfinder.shelters.shelter.sort(sortBy('name.$t'))
+          this.setState({
+            shelters: orderedResults
+          }, this.renderMap())
+          console.log('ordered list of shelters')
+          console.log(this.state.shelters)
+        })
+    }
+
+  getShelterPets = (selectedShelter) => {
+    // get array of pets in the selected shelter
+    let urlShelter = 'http://api.petfinder.com/shelter.getPets?key=1edf8545fafb2f223f05f30911af67fa&output=basic&format=json&id='+selectedShelter;
+    this.setState({selectedShelter: selectedShelter})
+    axios.get(urlShelter)
+      .then(res => {  
+          let shelterPets = res.data.petfinder.pets.pet
         this.setState({
-          shelters: orderedResults
-        }, this.renderMap())
-        console.log('ordered list of shelters')
-        console.log(this.state.shelters)
+          shelterPets: shelterPets,
+              shelterSelected: true
+        })
+      console.log(shelterPets)
       })
-  }
-// Draw the map =======================================================
+    }
+
+  onShelterSelect = (event) =>{
+    let selectedShelter = event.target.value
+    console.log(selectedShelter)
+    if(selectedShelter == 'all') {
+      this.setState({
+        selectedShelter: 'all',
+        shelterPets: [],
+      })
+      return
+      }
+      this.getShelterPets(selectedShelter)
+    }
+
+  // Draw the map =======================================================
   renderMap = () => {
     let mapKey = "AIzaSyAyEUmiQYNT6nrZK6ACULxyVASU8XcyWNc"
     scriptInit("https://maps.googleapis.com/maps/api/js?key="+mapKey+"&callback=initMap")
-    window.initMap = this.initMap
-}
+    window.initMap = this.initMap  // specify where to find initMap for the callback function
+    }
 
 
-// Set the map parameters for the renderMap() to use
+// Set the center for the renderMap() to use
   initMap = (setLat, setLng) => {
-    let lat = (setLat || 39.155393)
-    let lng = (setLng || -84.274159)
+
+    let lat = (setLat || 39.155393)  // set selected location or initial center
+    let lng = (setLng || -84.274159) // set selected loaction or initial center
     const map = new window.google.maps.Map(document.getElementById('map'), {
             center: {
               lat: lat, 
@@ -77,9 +108,11 @@ class App extends Component {
     const infoWindow = new window.google.maps.InfoWindow()
 
 // Markers ============================================================
-// Loop over my shelter locations to put markers on the map
+
+    // Loop over my shelter locations to put markers on the map
     let shelters = this.state.shelters
     shelters.map((shelter) => {
+
       // set shelter data for use
         let name = shelter.name.$t;
         let id = shelter.id.$t;
@@ -95,7 +128,7 @@ class App extends Component {
         shelter.zipcode = zipcode;
 
 
-      // InfoWindow Content ===============================================
+      // InfoWindow Content ===========================================
         let shelterInfo = 
                 '<div>'+
                   '<h3>'+`${shelter.title}`+'</h3>'+
@@ -105,6 +138,7 @@ class App extends Component {
                     `${shelter.stateName}`+' '+
                     `${shelter.zipcode}`+
                 '</div>';
+                // end infoWindow content
 
       // Create the markers & drop them onto the map
         let marker = new window.google.maps.Marker({
@@ -115,7 +149,7 @@ class App extends Component {
           map: map,
           title: shelter.name.$t,
           animation: window.google.maps.Animation.DROP
-        })
+        }) // end markerMaker
 
       // Show infowindow & toggle bounce on marker click
         marker.addListener('click', function() {
@@ -124,40 +158,13 @@ class App extends Component {
           if(marker.getAnimation(true)) {
               marker.setAnimation(null)
           } else {
-              marker.setAnimation(window.google.maps.Animation.BOUNCE)            
+              marker.setAnimation(window.google.maps.Animation.BOUNCE)
           }
-        });
-    })
-} // end initMap()
+        }); // end listener function
 
-getShelterPets(selectedShelter) {
-  // get array of pets in the selected shelter
-  let urlShelter = 'http://api.petfinder.com/shelter.getPets?key=1edf8545fafb2f223f05f30911af67fa&output=basic&format=json&id='+selectedShelter;
-  this.setState({selectedShelter: selectedShelter})
-  axios.get(urlShelter)
-    .then(res => {  
-        let shelterPets = res.data.petfinder.pets.pet
-      this.setState({
-        shelterPets: shelterPets,
-            shelterSelected: true
-      })
-    console.log(shelterPets)
-    })
-  }
+    }) // end shelters.map
 
-onShelterSelect(event) {
-  let selectedShelter = event.target.value
-  console.log(selectedShelter)
-  if(selectedShelter == 'all') {
-    this.setState({
-      selectedShelter: 'all',
-      shelterPets: [],
-    })
-    return
-    }
-    this.getShelterPets(selectedShelter)
-  }
-
+} // end map ===========================================================
 
 
   render() {
