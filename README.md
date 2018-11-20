@@ -6,7 +6,7 @@ This project was created as an example of a REACT app with multiple API integrat
 
 ### To get started, please complete the following steps:
 
- 1. `git clone` or download the GitHub repo <a href='https://github.com/SallyMstar/goodneighbor.git'>goodneighbor (https://github.com/SallyMstar/goodneighbor.git)</a> 
+ 1. `git clone` or download the GitHub repo <a href='https://github.com/SallyMstar/petconnect.git'>petconnect (https://github.com/SallyMstar/petconnect.git)</a> 
  2. As noted below, enable CORS in your browser.  *You will get no data if you don't complete this step.*
  2. In a terminal window, navigate to the project directory on your computer.
  3. Type `npm start` to start the development server.  This may take a few moments to complete.
