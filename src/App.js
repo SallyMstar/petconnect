@@ -12,8 +12,10 @@ class App extends Component {
       this.state = {
         pets: [],
         shelters: [],
-        shelterPets: [],
-        selectedShelter: '',
+        shelterSelected: false,
+        selectedShelter: 'all',
+        shelterData: [],
+        shelterPets: []
       };
 
   this.onShelterSelect = this.onShelterSelect.bind(this);
@@ -27,7 +29,7 @@ class App extends Component {
 
 // ========================== Function Factory ====================================
   // Create the function which can be passed or called as needed to get local pets
-    getLocalPets = () => {
+  getLocalPets = () => {
       const urlPets = 'http://api.petfinder.com/pet.find?key=1edf8545fafb2f223f05f30911af67fa&location=45150&output=basic&format=json';
       // get array of local pets for adoption
       axios.get(urlPets) 
@@ -73,13 +75,24 @@ class App extends Component {
   onShelterSelect = (event) =>{
     let selectedShelter = event.target.value
     console.log(selectedShelter)
-    if(selectedShelter == 'all') {
+    if(selectedShelter === 'all') {
       this.setState({
         selectedShelter: 'all',
         shelterPets: [],
+        shelterData: [],
+        shelterSelected: false
       })
+      this.renderMap(selectedShelter)
       return
       }
+      let shelterData = this.state.shelters.filter((shelter) => {
+        return (shelter.key === event.target.value)
+      })
+        this.setState({
+          shelterData: shelterData  
+        })
+        let shelterLat = parseFloat(shelterData[0].latitude.$t) 
+        let shelterLng = parseFloat(shelterData[0].longitude.$t) 
       this.getShelterPets(selectedShelter)
     }
 
@@ -93,7 +106,6 @@ class App extends Component {
 
 // Set the center for the renderMap() to use
   initMap = (setLat, setLng) => {
-
     let lat = (setLat || 39.155393)  // set selected location or initial center
     let lng = (setLng || -84.274159) // set selected loaction or initial center
     const map = new window.google.maps.Map(document.getElementById('map'), {
@@ -101,7 +113,7 @@ class App extends Component {
               lat: lat, 
               lng: lng
               },
-            zoom: 11
+            zoom: (this.props.shelterSelected === true) ? 15 : 11
         });
 
 // Create the infoWindow to call on when a marker is clicked
@@ -155,10 +167,21 @@ class App extends Component {
         marker.addListener('click', function() {
           infoWindow.setContent(shelterInfo)
           infoWindow.open(map, marker)
+          map.setZoom(13)
+          setTimeout(function() {
+            map.setZoom(11)
+            map.setCenter({
+              lat: 39.155393,
+              lng: -84.274159
+            })
+          }, 5000)
+          map.setCenter(marker.getPosition())
           if(marker.getAnimation(true)) {
               marker.setAnimation(null)
           } else {
-              marker.setAnimation(window.google.maps.Animation.BOUNCE)
+            marker.setAnimation(window.google.maps.Animation.BOUNCE)
+              setTimeout(function() {
+                marker.setAnimation(null)}, 3000)
           }
         }); // end listener function
 
@@ -186,7 +209,7 @@ class App extends Component {
                         id="shelterMenu" 
                         value={this.state.selectedShelter} 
                         onChange={this.onShelterSelect}>
-                        <option value='all' >View any shelter's adoptable pets:</option>
+                        <option value='' >View any shelter's adoptable pets:</option>
                         <option value='all' >View 25 nearby pets from any shelter</ option>
                       {shelters.map((shelter, index, key) =>
                         <option 
