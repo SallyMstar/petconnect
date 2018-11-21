@@ -160,6 +160,7 @@ class App extends Component {
           },
           map: map,
           title: shelter.name.$t,
+          key: shelter.key,
           animation: window.google.maps.Animation.DROP
         }) // end markerMaker
 
@@ -167,6 +168,8 @@ class App extends Component {
         marker.addListener('click', function() {
           infoWindow.setContent(shelterInfo)
           infoWindow.open(map, marker)
+          console.log(marker)
+          
           map.setZoom(13)
           setTimeout(function() {
             map.setZoom(11)
