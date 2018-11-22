@@ -4,8 +4,6 @@ import axios from 'axios'
 import PetParade from './PetParade'
 import './App.css'
 
-  // global variables to allow access from any function
-let map;
 
 class App extends Component {
 
@@ -18,13 +16,12 @@ class App extends Component {
         selectedShelter: 'all',
         shelterData: [],
         shelterPets: [],
-        markerKey: ''
+        shelterMarkers: []
       };
 
   this.onShelterSelect = this.onShelterSelect.bind(this);
 
     }
-
 
   componentDidMount() {
     this.getLocalPets()
@@ -86,7 +83,6 @@ class App extends Component {
         shelterData: [],
         shelterSelected: false
       })
-      this.renderMap(selectedShelter)
       return
       }
       let shelterData = this.state.shelters.filter((shelter) => {
@@ -118,13 +114,12 @@ class App extends Component {
               lng: lng
               },
             zoom: (this.props.shelterSelected === true) ? 15 : 11
-        });
-
+          });
 // Create the infoWindow to call on when a marker is clicked
     const infoWindow = new window.google.maps.InfoWindow()
 
 // Markers ============================================================
-
+    let shelterMarkers = []
     // Loop over my shelter locations to put markers on the map
     let shelters = this.state.shelters
     shelters.map((shelter) => {
@@ -164,7 +159,6 @@ class App extends Component {
           },
           map: map,
           title: shelter.name.$t,
-          key: shelter.key,
           animation: window.google.maps.Animation.DROP
         }) // end markerMaker
 
@@ -172,15 +166,14 @@ class App extends Component {
         marker.addListener('click', function() {
           infoWindow.setContent(shelterInfo)
           infoWindow.open(map, marker)
-          console.log(marker.key)
-          map.setZoom(13)
+          map.setZoom(15)
           setTimeout(function() {
             map.setZoom(11)
             map.setCenter({
               lat: 39.155393,
               lng: -84.274159
             })
-          }, 5000)
+          }, 3000)
           map.setCenter(marker.getPosition())
           if(marker.getAnimation(true)) {
               marker.setAnimation(null)
@@ -190,11 +183,15 @@ class App extends Component {
                 marker.setAnimation(null)}, 3000)
           }
         }); // end listener function
-
+          shelterMarkers.push(marker)
     }) // end shelters.map
 
-} // end map ===========================================================
 
+      this.setState({
+        shelterMarkers: shelterMarkers
+      })
+
+} // end map ===========================================================
 
   render() {
 
