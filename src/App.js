@@ -4,6 +4,8 @@ import axios from 'axios'
 import PetParade from './PetParade'
 import './App.css'
 
+  // global variables to allow access from any function
+let map;
 
 class App extends Component {
 
@@ -15,12 +17,14 @@ class App extends Component {
         shelterSelected: false,
         selectedShelter: 'all',
         shelterData: [],
-        shelterPets: []
+        shelterPets: [],
+        markerKey: ''
       };
 
   this.onShelterSelect = this.onShelterSelect.bind(this);
 
     }
+
 
   componentDidMount() {
     this.getLocalPets()
@@ -168,8 +172,7 @@ class App extends Component {
         marker.addListener('click', function() {
           infoWindow.setContent(shelterInfo)
           infoWindow.open(map, marker)
-          console.log(marker)
-          
+          console.log(marker.key)
           map.setZoom(13)
           setTimeout(function() {
             map.setZoom(11)
