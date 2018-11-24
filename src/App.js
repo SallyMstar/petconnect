@@ -74,6 +74,7 @@ class App extends Component {
         })
       console.log(shelterPets)
       })
+      .then(this.initMap(selectedShelter))
     }
 
   onShelterSelect = (event) =>{
