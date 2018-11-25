@@ -76,6 +76,7 @@ class App extends Component {
       })
     }
 
+    // When a shelter is selected from the menu, filter the markers and the pets
   onShelterSelect = (event) =>{
     let selectedShelter = event.target.value
     console.log(selectedShelter)
@@ -86,22 +87,23 @@ class App extends Component {
         shelterData: [],
         shelterSelected: false
       })
-      this.markerMaker(selectedShelter)
+      this.markerMaker(selectedShelter)  // show all markers for 'all' selection
       return
       }
+      // get the shelter that matches the selection
       let shelterData = this.state.shelters.filter((shelter) => {
         return (shelter.key === event.target.value)
       })
         this.setState({
-          shelterData: shelterData  
+          shelterData: shelterData  // set the selected shelter
         })
         // let shelterLat = parseFloat(shelterData[0].latitude.$t) 
         // let shelterLng = parseFloat(shelterData[0].longitude.$t) 
-      this.getShelterPets(selectedShelter)
-      this.markerMaker(selectedShelter)
+      this.getShelterPets(selectedShelter)  // get the pets for selected shelter
+      this.markerMaker(selectedShelter)     // show only the marker for the selected shelter
     }
-
-  markerMaker = (selectedShelter) => {
+    // marker filter based on selection
+  markerMaker = (selectedShelter) => {   
     this.state.shelterMarkers.map((marker) => {
       // only show the markers for selected locations
       {(selectedShelter !== 'all')&&(selectedShelter !== marker.key)
@@ -111,7 +113,7 @@ class App extends Component {
   }
 
   // Draw the map =======================================================
-  renderMap = () => {
+  renderMap = () => {  
     let mapKey = "AIzaSyAyEUmiQYNT6nrZK6ACULxyVASU8XcyWNc"
     scriptInit("https://maps.googleapis.com/maps/api/js?key="+mapKey+"&callback=initMap")
     window.initMap = this.initMap  // specify where to find initMap for the callback function
