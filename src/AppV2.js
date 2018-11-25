@@ -4,8 +4,6 @@ import axios from 'axios'
 import PetParade from './PetParade'
 import './App.css'
 
-  // global variables to allow access from any function
-let map;
 
 class App extends Component {
 
@@ -15,7 +13,7 @@ class App extends Component {
         pets: [],
         shelters: [],
         shelterSelected: false,
-        selectedShelter: 'all',
+        selectedShelter: '',
         shelterData: [],
         shelterPets: [],
         shelterMarkers: []
@@ -24,7 +22,6 @@ class App extends Component {
   this.onShelterSelect = this.onShelterSelect.bind(this);
 
     }
-
 
   componentDidMount() {
     this.getLocalPets()
@@ -55,16 +52,16 @@ class App extends Component {
           let orderedResults = res.data.petfinder.shelters.shelter.sort(sortBy('name.$t'))
           this.setState({
             shelters: orderedResults
-          }, this.renderMap())
+          },)
           console.log('ordered list of shelters')
           console.log(this.state.shelters)
         })
+        .then(this.renderMap())
     }
 
   getShelterPets = (selectedShelter) => {
     // get array of pets in the selected shelter
     let urlShelter = 'http://api.petfinder.com/shelter.getPets?key=1edf8545fafb2f223f05f30911af67fa&output=basic&format=json&id='+selectedShelter;
-    this.setState({selectedShelter: selectedShelter})
     axios.get(urlShelter)
       .then(res => {  
           let shelterPets = res.data.petfinder.pets.pet
@@ -74,10 +71,11 @@ class App extends Component {
         })
       console.log(shelterPets)
       })
+      .then(this.initMap(selectedShelter))
     }
 
-  onShelterSelect = (event) =>{
-    let selectedShelter = event.target.value
+  onShelterSelect = (event) => {
+    let selectedShelter = event.target.value || 'all'
     console.log(selectedShelter)
     if(selectedShelter === 'all') {
       this.setState({
@@ -86,29 +84,20 @@ class App extends Component {
         shelterData: [],
         shelterSelected: false
       })
-      this.markerMaker(selectedShelter)
+      this.initMap(selectedShelter)
       return
       }
       let shelterData = this.state.shelters.filter((shelter) => {
         return (shelter.key === event.target.value)
       })
         this.setState({
+          selectedShelter: selectedShelter,
           shelterData: shelterData  
         })
         // let shelterLat = parseFloat(shelterData[0].latitude.$t) 
         // let shelterLng = parseFloat(shelterData[0].longitude.$t) 
       this.getShelterPets(selectedShelter)
-      this.markerMaker(selectedShelter)
     }
-
-  markerMaker = (selectedShelter) => {
-    this.state.shelterMarkers.map((marker) => {
-      // only show the markers for selected locations
-      {(selectedShelter !== 'all')&&(selectedShelter !== marker.key)
-      ? marker.setVisible(false)
-      : marker.setVisible(true)}    
-    })
-  }
 
   // Draw the map =======================================================
   renderMap = () => {
@@ -118,18 +107,16 @@ class App extends Component {
     }
 
 
-// Set the center for the renderMap() to use
-  initMap = (setLat, setLng) => {
-    let lat = (setLat || 39.185393)  // set selected location or initial center
-    let lng = (setLng || -84.274159) // set selected loaction or initial center
+  initMap = (selectedShelter) => {
+    let lat = (39.185393)  // set selected location or initial center
+    let lng = (-84.274159) // set selected loaction or initial center
     const map = new window.google.maps.Map(document.getElementById('map'), {
             center: {
               lat: lat, 
               lng: lng
               },
-            zoom: (this.props.shelterSelected === true) ? 15 : 11
-        });
-
+            zoom: 11
+          });
 // Create the infoWindow to call on when a marker is clicked
     const infoWindow = new window.google.maps.InfoWindow()
 
@@ -167,8 +154,10 @@ class App extends Component {
                 // end infoWindow content
 
       // Create the markers & drop them onto the map
-      // Only show the selected locations
-
+      console.log(this.state.shelterSelected)
+      console.log(shelter.key)
+      console.log(selectedShelter)
+      if((selectedShelter === 'all') || (shelter.key === selectedShelter)) {
         let marker = new window.google.maps.Marker({
           position: {
             lat: parseFloat(shelter.latitude.$t), // parseFloat to convert from string to number
@@ -176,26 +165,22 @@ class App extends Component {
           },
           map: map,
           title: shelter.name.$t,
-          key: shelter.key,
-          animation: window.google.maps.Animation.DROP,
-        }) // end marker
+          animation: window.google.maps.Animation.DROP
+        }) // end markerMaker
 
       // Show infowindow & toggle bounce on marker click
         marker.addListener('click', function() {
           infoWindow.setContent(shelterInfo)
           infoWindow.open(map, marker)
-          setTimeout(function() {
-            infoWindow.close()},5000)
-          console.log(marker.key)
-          map.setZoom(13)
-          setTimeout(function() {
-            map.setZoom(11)
-            map.setCenter({
-              lat: 39.185393,
-              lng: -84.27415
-            })
-          }, 5000)
-          map.setCenter(marker.getPosition())
+          // map.setZoom(15)
+          // setTimeout(function() {
+          //   map.setZoom(11)
+          //   map.setCenter({
+          //     lat: 39.155393,
+          //     lng: -84.274159
+          //   })
+          // }, 3000)
+          // map.setCenter(marker.getPosition())
           if(marker.getAnimation(true)) {
               marker.setAnimation(null)
           } else {
@@ -204,11 +189,10 @@ class App extends Component {
                 marker.setAnimation(null)}, 3000)
           }
         }); // end listener function
-          console.log(marker.getVisible())
           shelterMarkers.push(marker)
+    } // end shelters.map
+    })
 
-
-    }) // end shelters.map
       this.setState({
         shelterMarkers: shelterMarkers
       })
@@ -220,6 +204,7 @@ class App extends Component {
 
       let pets = this.state.pets;
       let shelters = this.state.shelters
+
 
     return (
 <>
@@ -233,10 +218,10 @@ class App extends Component {
               <form>
                       <select 
                         id="shelterMenu" 
-                        value={this.state.selectedShelter} 
+                        value={this.state.selectedShelter}
                         onChange={this.onShelterSelect}>
-                        <option disabled value='' >Select a shelter to view their pets:</option>
-                        <option value='all' >View adoptable pets at any nearby shelters</option>
+                        <option value='' >Select a shelter to view:</option>
+                        <option value='all' >View all nearby shelters</ option>
                       {shelters.map((shelter, index, key) =>
                         <option 
                           key={index}

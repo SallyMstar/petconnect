@@ -11,9 +11,6 @@ class PetParade extends Component {
 render() {
 	let filteredPets = (((this.props.shelterPets)&&(this.props.shelterPets.length > 0)) ? (this.props.shelterPets) : (this.props.pets ))
 
-console.log(filteredPets)
-console.log(this.props.selectedShelter)
-
 	return(
 
 		<div className="section2">
