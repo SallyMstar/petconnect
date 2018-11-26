@@ -41,10 +41,15 @@ class App extends Component {
           this.setState({
             pets: res.data.petfinder.pets.pet
           })
+        })
+
+        .catch(error => {
+            alert('Sorry, No pet data was received from the server. Please try again.')
+        })
+
           console.log('pets:')
           console.log(this.state.pets)
-        })
-    }
+        };
 
   // Create the function which can be passed or called as needed to get local shelters
   getLocalShelters = () => {
@@ -56,8 +61,13 @@ class App extends Component {
           this.setState({
             shelters: orderedResults
           }, this.renderMap())
+
           console.log('ordered list of shelters')
           console.log(this.state.shelters)
+        })
+        .catch(error => {
+            alert('Sorry, No local shelter data was received from the server. Please try again.')
+            this.renderMap()
         })
     }
 
@@ -74,6 +84,9 @@ class App extends Component {
         })
       console.log(shelterPets)
       })
+      .catch(error => {
+            alert('Sorry, No pet data for the selected shelter was received from the server. Please try again.')
+        })
     }
 
     // When a shelter is selected from the menu, filter the markers and the pets
@@ -111,6 +124,8 @@ class App extends Component {
       : marker.setVisible(true)}    
     })
   }
+
+
 
   // Draw the map =======================================================
   renderMap = () => {  
@@ -205,7 +220,7 @@ class App extends Component {
               setTimeout(function() {
                 marker.setAnimation(null)}, 3000)
           }
-        }); // end listener function
+        }); // end 1st listener function
           console.log(marker.getVisible())
           shelterMarkers.push(marker)
 
@@ -238,13 +253,12 @@ class App extends Component {
                         value={this.state.selectedShelter} 
                         onChange={this.onShelterSelect}>
                         <option disabled value='' >Select a shelter to view their pets:</option>
-                        <option value='all' >View adoptable pets at any nearby shelters</option>
+                        <option value='all' >View all area pet shelters</option>
                       {shelters.map((shelter, index, key) =>
                         <option 
                           key={index}
                           id={key}
-                          value={shelter.id.$t}
-                          onClick={ this.onShelterSelect }>
+                          value={shelter.id.$t}>
                           {shelter.name.$t} ({shelter.id.$t})
                         </option>
                       )}
@@ -252,14 +266,15 @@ class App extends Component {
                 </form>
             </div>
 
-        <div id = "map" role='application'>
+        <div id = "map" role='application'> 
         </div>
 
       <PetParade 
         pets={this.state.pets} 
         shelterPets={this.state.shelterPets} 
-                shelterSelected={this.state.shelterSelected}
+        shelterSelected={this.state.shelterSelected}
         selectedShelter={this.state.selectedShelter} 
+        markerMaker = {this.markerMaker}
         />
 
 </div>
