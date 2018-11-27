@@ -23,7 +23,10 @@ render() {
 						key={pet.id.$t} 
 						className = "item">
 	                	<div 
-	                	className ='petName'>
+	                	className ='petName'
+	                	tabindex='0'
+	                	aria-label= {pet.name.$t}
+	                	>
 	                		~ {pet.name.$t} ~
 	                			<br/>
 	                		{pet.breeds.breed.$t}
@@ -34,12 +37,13 @@ render() {
 	                		alt={pet.name.$t} 
 	                		onMouseOver={() => this.props.markerMaker(pet.shelterId.$t)}
 	                		onMouseOut={() => this.props.markerMaker(this.props.selectedShelter)}
+	                		tabindex='0'
 	                		/>
 	                	) : (
-	                		<p>no image available</p>
+	                		<p tabindex='0'>no image available</p>
 	                	)
 	                	}
-	                <div>
+	                <div tabindex='0' aria-label={pet.shelterId.$t}>
 	                Shelter {pet.shelterId.$t}
 	                </div>
 					</div>

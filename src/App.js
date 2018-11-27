@@ -91,6 +91,7 @@ class App extends Component {
 
     // When a shelter is selected from the menu, filter the markers and the pets
   onShelterSelect = (event) =>{
+    console.log(event.target.value)
     let selectedShelter = event.target.value
     console.log(selectedShelter)
     if(selectedShelter === 'all') {
@@ -113,15 +114,19 @@ class App extends Component {
         // let shelterLat = parseFloat(shelterData[0].latitude.$t) 
         // let shelterLng = parseFloat(shelterData[0].longitude.$t) 
       this.getShelterPets(selectedShelter)  // get the pets for selected shelter
-      this.markerMaker(selectedShelter)     // show only the marker for the selected shelter
+      this.markerMaker(selectedShelter, true)     // show only the marker for the selected shelter
     }
     // marker filter based on selection
-  markerMaker = (selectedShelter) => {   
+  markerMaker = (selectedShelter, active) => {   
     this.state.shelterMarkers.map((marker) => {
       // only show the markers for selected locations
       {(selectedShelter !== 'all')&&(selectedShelter !== marker.key)
       ? marker.setVisible(false)
-      : marker.setVisible(true)}    
+      : marker.setVisible(true)}  
+
+      if((selectedShelter === marker.key) && (active === true)) {
+         (window.google.maps.event.trigger(marker, 'click'))
+    }       
     })
   }
 
@@ -246,27 +251,31 @@ class App extends Component {
 
   <div id = "container">
           <div id= 'menu' className = "section1">
-              <legend><h2><em>View adoptable pets</em></h2></legend>
-              <form>
-                      <select 
-                        id="shelterMenu" 
-                        value={this.state.selectedShelter} 
-                        onChange={this.onShelterSelect}>
-                        <option disabled value='' >Select a shelter to view their pets:</option>
-                        <option value='all' >View all area pet shelters</option>
+              <legend><h3><em>Select a shelter:</em></h3></legend>
+                      <button 
+                          tabindex='0'
+                          value='all'
+                          onClick = {(event) => this.onShelterSelect(event)}
+                          aria-label = 'View all area Shelters'
+                          >
+                          -- View all area shelters --
+                      </button>
                       {shelters.map((shelter, index, key) =>
-                        <option 
+                      <button 
+                          tabindex='0'
+                          aria-label = {shelter.name.$t}
                           key={index}
-                          id={key}
-                          value={shelter.id.$t}>
+                          value={shelter.id.$t}
+                          onClick = {(event) => this.onShelterSelect(event)}
+                          onMouseOver={() => this.markerMaker(shelter.id.$t)}
+                          onMouseOut={() => this.markerMaker(this.state.selectedShelter)}
+                          >
                           {shelter.name.$t} ({shelter.id.$t})
-                        </option>
+                          </button>
                       )}
-                      </select>
-                </form>
             </div>
 
-        <div id = "map" role='application'> 
+        <div id = "map" tabindex='0' role='application'> 
         </div>
 
       <PetParade 
