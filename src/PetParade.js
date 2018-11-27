@@ -19,7 +19,7 @@ render() {
 				<div className='noResults'>{this.props.shelterPets.length || 'No results. \nViewing nearby' } pets (max 25)</div>
 				))}
 			{filteredPets.map((pet) =>
-					<div 
+					<div id = 'petProfile'
 						key={pet.id.$t} 
 						className = "item">
 	                	<div 
@@ -32,6 +32,8 @@ render() {
 	              		? (<img 
 	                		src={pet.media.photos.photo[2].$t} 
 	                		alt={pet.name.$t} 
+	                		onMouseOver={() => this.props.markerMaker(pet.shelterId.$t)}
+	                		onMouseOut={() => this.props.markerMaker(this.props.selectedShelter)}
 	                		/>
 	                	) : (
 	                		<p>no image available</p>

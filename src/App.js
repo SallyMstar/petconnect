@@ -144,7 +144,7 @@ class App extends Component {
               lat: lat, 
               lng: lng
               },
-            zoom: (this.props.shelterSelected === true) ? 15 : 11
+            zoom: (this.props.shelterSelected === true) ? 15 : 10
         });
 
 // Create the infoWindow to call on when a marker is clicked
@@ -206,7 +206,7 @@ class App extends Component {
           console.log(marker.key)
           map.setZoom(13)
           setTimeout(function() {
-            map.setZoom(11)
+            map.setZoom(10)
             map.setCenter({
               lat: 39.185393,
               lng: -84.27415
@@ -281,7 +281,8 @@ class App extends Component {
 
 
   <div className='section3'>
-  All pet data was provided by PetFinder API & the <a href="https://pngtree.com/free-icon/paws_626868">Paw Print Icon</a> from pngtree.com
+      *Please note that more than one shelter may be based in the same location.<br/>
+      Pet data provided by PetFinder API, & the <a href="https://pngtree.com/free-icon/paws_626868">Paw Print Icon</a> is from pngtree.com
   </div>
 
 </>
