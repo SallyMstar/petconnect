@@ -1,0 +1,13 @@
+{
+  "main.css": "/petconnect/static/css/main.bb5238ab.chunk.css",
+  "main.js": "/petconnect/static/js/main.4f6bcac9.chunk.js",
+  "main.js.map": "/petconnect/static/js/main.4f6bcac9.chunk.js.map",
+  "static/js/1.6db92d9f.chunk.js": "/petconnect/static/js/1.6db92d9f.chunk.js",
+  "static/js/1.6db92d9f.chunk.js.map": "/petconnect/static/js/1.6db92d9f.chunk.js.map",
+  "runtime~main.js": "/petconnect/static/js/runtime~main.5f3267f7.js",
+  "runtime~main.js.map": "/petconnect/static/js/runtime~main.5f3267f7.js.map",
+  "static/css/main.bb5238ab.chunk.css.map": "/petconnect/static/css/main.bb5238ab.chunk.css.map",
+  "index.html": "/petconnect/index.html",
+  "precache-manifest.d56cff8ac7d69bf06d996dd67ac5b547.js": "/petconnect/precache-manifest.d56cff8ac7d69bf06d996dd67ac5b547.js",
+  "service-worker.js": "/petconnect/service-worker.js"
+}
