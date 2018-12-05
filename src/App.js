@@ -34,7 +34,7 @@ class App extends Component {
 // ========================== Function Factory ====================================
   // Create the function which can be passed or called as needed to get local pets
   getLocalPets = () => {
-      const urlPets = 'https://api.petfinder.com/pet.find?key=1edf8545fafb2f223f05f30911af67fa&location=45150&output=basic&format=json';
+      const urlPets = 'http://api.petfinder.com/pet.find?key=1edf8545fafb2f223f05f30911af67fa&location=45150&output=basic&format=json';
       // get array of local pets for adoption
       axios.get(urlPets) 
         .then(res => {
@@ -53,7 +53,7 @@ class App extends Component {
 
   // Create the function which can be passed or called as needed to get local shelters
   getLocalShelters = () => {
-      const urlLocations = 'https://api.petfinder.com/shelter.find?key=1edf8545fafb2f223f05f30911af67fa&location=45150&output=basic&format=json';
+      const urlLocations = 'http://api.petfinder.com/shelter.find?key=1edf8545fafb2f223f05f30911af67fa&location=45150&output=basic&format=json';
        // get array of local animal shelters
       axios.get(urlLocations)
         .then(res => {
@@ -73,7 +73,7 @@ class App extends Component {
 
   getShelterPets = (selectedShelter) => {
     // get array of pets in the selected shelter
-    let urlShelter = 'https://api.petfinder.com/shelter.getPets?key=1edf8545fafb2f223f05f30911af67fa&output=basic&format=json&id='+selectedShelter;
+    let urlShelter = 'http://api.petfinder.com/shelter.getPets?key=1edf8545fafb2f223f05f30911af67fa&output=basic&format=json&id='+selectedShelter;
     this.setState({selectedShelter: selectedShelter})
     axios.get(urlShelter)
       .then(res => {  
@@ -135,7 +135,7 @@ class App extends Component {
   // Draw the map =======================================================
   renderMap = () => {  
     let mapKey = "AIzaSyAyEUmiQYNT6nrZK6ACULxyVASU8XcyWNc"
-    scriptInit("httpss://maps.googleapis.com/maps/api/js?key="+mapKey+"&callback=initMap")
+    scriptInit("https://maps.googleapis.com/maps/api/js?key="+mapKey+"&callback=initMap")
     window.initMap = this.initMap  // specify where to find initMap for the callback function
     }
 
@@ -291,7 +291,7 @@ class App extends Component {
 
   <div className='section3'>
       *Please note that more than one shelter may be based in the same location.<br/>
-      Pet data provided by PetFinder API, & the <a href="httpss://pngtree.com/free-icon/paws_626868">Paw Print Icon</a> is from pngtree.com
+      Pet data provided by PetFinder API, & the <a href="https://pngtree.com/free-icon/paws_626868">Paw Print Icon</a> is from pngtree.com
   </div>
 
 </>
