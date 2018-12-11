@@ -253,7 +253,7 @@ class App extends Component {
           <div id= 'menu' className = "section1">
               <legend><h3><em>Select a shelter:</em></h3></legend>
                       <button 
-                          tabindex='0'
+                          tabIndex='0'
                           value='all'
                           onClick = {(event) => this.onShelterSelect(event)}
                           aria-label = 'View all area Shelters'
@@ -262,7 +262,7 @@ class App extends Component {
                       </button>
                       {shelters.map((shelter, index, key) =>
                       <button 
-                          tabindex='0'
+                          tabIndex='0'
                           aria-label = {shelter.name.$t}
                           key={index}
                           value={shelter.id.$t}
@@ -275,7 +275,7 @@ class App extends Component {
                       )}
             </div>
 
-        <div id = "map" tabindex='0' role='application'> 
+        <div id = "map" tabIndex='0' role='application'> 
         </div>
 
       <PetParade 
