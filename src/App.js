@@ -44,7 +44,7 @@ class App extends Component {
         })
 
         .catch(error => {
-            alert('Sorry, No pet data was received from the server. Please try again.')
+            alert('Sorry, No pet data was received from the server. Please enable the CORS plugin on your browser.')
         })
 
           console.log('pets:')
@@ -66,7 +66,7 @@ class App extends Component {
           console.log(this.state.shelters)
         })
         .catch(error => {
-            alert('Sorry, No local shelter data was received from the server. Please try again.')
+            alert('Sorry, No local shelter data was received from the server. Please enable the CORS plugin on your browser.')
             this.renderMap()
         })
     }
@@ -85,7 +85,7 @@ class App extends Component {
       console.log(shelterPets)
       })
       .catch(error => {
-            alert('Sorry, No pet data for the selected shelter was received from the server. Please try again.')
+            alert('Sorry, No pet data for the selected shelter was received from the server. Please enable the CORS plugin on your browser.')
         })
     }
 
@@ -246,6 +246,7 @@ class App extends Component {
     return (
 <>
   <div id = "header">
+  <a href='https://github.com/SallyMstar/petconnect#follow-the-instructions-below-to-enable-the-plugin-for-your-browser' target = 'blank'>How to enable CORS plugin</a>
     <h1>Furry Friend Finder</h1>
   </div>
 

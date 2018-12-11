@@ -33,6 +33,14 @@ legend {
   text-align: center;
 }
 
+#header a {
+  position: fixed;
+  top: 5px;
+  right: 5px;
+  left: auto;
+  display: inline-flex;
+}
+
 h1 {
   font-style: italic;
   margin-left: 20px;

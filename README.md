@@ -18,7 +18,7 @@ This project was created as an example of a REACT app with multiple API integrat
 
 * Firefox: <a href='https://addons.mozilla.org/en-US/firefox/addon/cors-everywhere/' target='blank'>CORS Everywhere – Get this Extension for  Firefox (en-US)</a>
 
-* Chrome: <a href='https://chrome.google.com/webstore/detail/cors/dboaklophljenpcjkbbibpkbpbobnbld?hl=en' target='blank'>CORS - Chrome Web Store - Google Chrome</a>
+* Chrome: <a href='https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi?hl=en' target='blank'>CORS - Chrome Web Store - Google Chrome</a>
 
 * Safari: Later versions of Safari allow you to Disable Cross-Origin Restrictions. Just enable the developer menu from Preferences >> Advanced, and select "Disable Cross-Origin Restrictions" from the develop menu.
 
