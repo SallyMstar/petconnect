@@ -35,8 +35,6 @@ render() {
 	              		? (<img 
 	                		src={pet.media.photos.photo[2].$t} 
 	                		alt={pet.name.$t} 
-	                		onMouseOver={() => this.props.markerMaker(pet.shelterId.$t)}
-	                		onMouseOut={() => this.props.markerMaker(this.props.selectedShelter)}
 	                		tabIndex='0'
 	                		/>
 	                	) : (
