@@ -34,7 +34,7 @@ class App extends Component {
 // ========================== Function Factory ====================================
   // Create the function which can be passed or called as needed to get local pets
   getLocalPets = () => {
-      const urlPets = 'http://api.petfinder.com/pet.find?key=1edf8545fafb2f223f05f30911af67fa&location=45150&output=basic&format=json';
+      const urlPets = 'http://api.petfinder.com/pet.find?key=qYDR44KE32EF0hKonCqN0pBFGiyQghnVVlCwvyMfhhNLd6sb5H&location=45150&output=basic&format=json';
       // get array of local pets for adoption
       axios.get(urlPets) 
         .then(res => {
@@ -53,7 +53,7 @@ class App extends Component {
 
   // Create the function which can be passed or called as needed to get local shelters
   getLocalShelters = () => {
-      const urlLocations = 'http://api.petfinder.com/shelter.find?key=1edf8545fafb2f223f05f30911af67fa&location=45150&output=basic&format=json';
+      const urlLocations = 'http://api.petfinder.com/shelter.find?key=qYDR44KE32EF0hKonCqN0pBFGiyQghnVVlCwvyMfhhNLd6sb5H&location=45150&output=basic&format=json';
        // get array of local animal shelters
       axios.get(urlLocations)
         .then(res => {
@@ -73,7 +73,7 @@ class App extends Component {
 
   getShelterPets = (selectedShelter) => {
     // get array of pets in the selected shelter
-    let urlShelter = 'http://api.petfinder.com/shelter.getPets?key=1edf8545fafb2f223f05f30911af67fa&output=basic&format=json&id='+selectedShelter;
+    let urlShelter = 'http://api.petfinder.com/shelter.getPets?key=qYDR44KE32EF0hKonCqN0pBFGiyQghnVVlCwvyMfhhNLd6sb5H&output=basic&format=json&id='+selectedShelter;
     this.setState({selectedShelter: selectedShelter})
     axios.get(urlShelter)
       .then(res => {  
